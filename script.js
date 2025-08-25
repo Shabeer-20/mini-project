@@ -1,73 +1,106 @@
 let currentPlayer = 'X';
-        let gameBoard = ['', '', '', '', '', '', '', '', ''];
-        let gameActive = true;
+let gameBoard = ['', '', '', '', '', '', '', '', ''];
+let gameActive = true;
+let timer;
+let timeLeft = 5;
 
-        const statusDisplay = document.getElementById('status');
-        const cells = document.querySelectorAll('.cell');
+const statusDisplay = document.getElementById('status');
+const timerDisplay = document.getElementById('timer');
+const cells = document.querySelectorAll('.cell');
 
-        const winningConditions = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6]
-        ];
+const winningConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+];
 
-        function handleCellClick(clickedCellEvent) {
-            const clickedCell = clickedCellEvent.target;
-            const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
+// Start timer for each turn
+function startTimer() {
+    clearInterval(timer);
+    timeLeft = 5;
+    timerDisplay.textContent = `Time left: ${timeLeft}s`;
 
-            if (gameBoard[clickedCellIndex] !== '' || !gameActive) {
-                return;
-            }
+    timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `Time left: ${timeLeft}s`;
 
-            gameBoard[clickedCellIndex] = currentPlayer;
-            clickedCell.textContent = currentPlayer;
-            clickedCell.style.color = currentPlayer === 'X' ? '#007bff' : '#dc3545';
-
-            checkResult();
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            // Skip turn
+            statusDisplay.textContent = `Player ${currentPlayer} ran out of time!`;
+            switchPlayer();
         }
+    }, 1000);
+}
 
-        function checkResult() {
-            let roundWon = false;
-            for (let i = 0; i < winningConditions.length; i++) {
-                const [a, b, c] = winningConditions[i];
-                if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
-                    roundWon = true;
-                    break;
-                }
-            }
+function handleCellClick(clickedCellEvent) {
+    const clickedCell = clickedCellEvent.target;
+    const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
 
-            if (roundWon) {
-                statusDisplay.textContent = `Player ${currentPlayer} wins!`;
-                gameActive = false;
-                return;
-            }
+    if (gameBoard[clickedCellIndex] !== '' || !gameActive) {
+        return;
+    }
 
-            if (!gameBoard.includes('')) {
-                statusDisplay.textContent = 'Game ended in a draw!';
-                gameActive = false;
-                return;
-            }
+    gameBoard[clickedCellIndex] = currentPlayer;
+    clickedCell.textContent = currentPlayer;
+    clickedCell.style.color = currentPlayer === 'X' ? '#007bff' : '#dc3545';
 
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-            statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+    checkResult();
+}
+
+function checkResult() {
+    let roundWon = false;
+    for (let i = 0; i < winningConditions.length; i++) {
+        const [a, b, c] = winningConditions[i];
+        if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+            roundWon = true;
+            break;
         }
+    }
 
-        function resetGame() {
-            currentPlayer = 'X';
-            gameBoard = ['', '', '', '', '', '', '', '', ''];
-            gameActive = true;
-            statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
-            cells.forEach(cell => {
-                cell.textContent = '';
-                cell.style.color = '';
-            });
-        }
+    if (roundWon) {
+        statusDisplay.textContent = `Player ${currentPlayer} wins!`;
+        gameActive = false;
+        clearInterval(timer);
+        return;
+    }
 
-        cells.forEach(cell => {
-            cell.addEventListener('click', handleCellClick);
-        });
+    if (!gameBoard.includes('')) {
+        statusDisplay.textContent = 'Game ended in a draw!';
+        gameActive = false;
+        clearInterval(timer);
+        return;
+    }
+
+    switchPlayer();
+}
+
+function switchPlayer() {
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+    startTimer();
+}
+
+function resetGame() {
+    currentPlayer = 'X';
+    gameBoard = ['', '', '', '', '', '', '', '', ''];
+    gameActive = true;
+    statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+    cells.forEach(cell => {
+        cell.textContent = '';
+        cell.style.color = '';
+    });
+    startTimer();
+}
+
+cells.forEach(cell => {
+    cell.addEventListener('click', handleCellClick);
+});
+
+// Start first timer
+startTimer();
