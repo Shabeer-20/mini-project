@@ -75,12 +75,10 @@ function resetGame() {
         cell.textContent = '';
         cell.style.color = '';
     });
-    startTimer();
 }
 
 cells.forEach(cell => {
     cell.addEventListener('click', handleCellClick);
 });
 
-// Start first timer
-startTimer();
+
