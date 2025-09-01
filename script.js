@@ -1,11 +1,9 @@
 let currentPlayer = 'X';
 let gameBoard = ['', '', '', '', '', '', '', '', ''];
 let gameActive = true;
-let timer;
 
 
 const statusDisplay = document.getElementById('status');
-const timerDisplay = document.getElementById('timer');
 const cells = document.querySelectorAll('.cell');
 
 const winningConditions = [
@@ -54,7 +52,6 @@ function checkResult() {
     if (!gameBoard.includes('')) {
         statusDisplay.textContent = 'Game ended in a draw!';
         gameActive = false;
-        clearInterval(timer);
         return;
     }
 
