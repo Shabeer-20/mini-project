@@ -19,7 +19,6 @@ const winningConditions = [
     [2, 4, 6]
 ];
 
-
 function handleCellClick(clickedCellEvent) {
     const clickedCell = clickedCellEvent.target;
     const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
@@ -65,7 +64,6 @@ function checkResult() {
 function switchPlayer() {
     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
     statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
-    startTimer();
 }
 
 function resetGame() {
@@ -77,6 +75,7 @@ function resetGame() {
         cell.textContent = '';
         cell.style.color = '';
     });
+    startTimer();
 }
 
 cells.forEach(cell => {
@@ -84,3 +83,4 @@ cells.forEach(cell => {
 });
 
 // Start first timer
+startTimer();
