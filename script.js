@@ -19,24 +19,6 @@ const winningConditions = [
     [2, 4, 6]
 ];
 
-// Start timer for each turn
-function startTimer() {
-    clearInterval(timer);
-    timeLeft = 5;
-    timerDisplay.textContent = `Time left: ${timeLeft}s`;
-
-    timer = setInterval(() => {
-        timeLeft--;
-        timerDisplay.textContent = `Time left: ${timeLeft}s`;
-
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            // Skip turn
-            statusDisplay.textContent = `Player ${currentPlayer} ran out of time!`;
-            switchPlayer();
-        }
-    }, 1000);
-}
 
 function handleCellClick(clickedCellEvent) {
     const clickedCell = clickedCellEvent.target;
@@ -95,7 +77,6 @@ function resetGame() {
         cell.textContent = '';
         cell.style.color = '';
     });
-    startTimer();
 }
 
 cells.forEach(cell => {
@@ -103,4 +84,3 @@ cells.forEach(cell => {
 });
 
 // Start first timer
-startTimer();
