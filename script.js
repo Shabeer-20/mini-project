@@ -2,7 +2,7 @@ let currentPlayer = 'X';
 let gameBoard = ['', '', '', '', '', '', '', '', ''];
 let gameActive = true;
 let timer;
-let timeLeft = 5;
+
 
 const statusDisplay = document.getElementById('status');
 const timerDisplay = document.getElementById('timer');
